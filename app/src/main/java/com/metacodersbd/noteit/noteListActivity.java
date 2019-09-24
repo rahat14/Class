@@ -2,21 +2,28 @@ package com.metacodersbd.noteit;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.appcompat.widget.SearchView ;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -26,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.metacodersbd.noteit.models.noteModel;
 import com.metacodersbd.noteit.signFunction.signInPage;
 
@@ -64,6 +72,13 @@ public class noteListActivity extends AppCompatActivity {
         logOutBtn = findViewById(R.id.logoutBtn);
         fab = findViewById(R.id.fab) ;
         recyclerView = findViewById(R.id.recyclerViewForNoteList);
+
+
+        //TODO 1. search  implementation
+        //TODo 2. update the notes
+        //TODO 3. Deleting the notes
+        //TODO 4. Finalizing / testing
+
 
 
         //init recyelrview ;
@@ -112,11 +127,132 @@ public class noteListActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+
+       // return super.onCreateOptionsMenu(menu);
+
+        // inflate the menu bar  ; this adds items to the action bar
+        getMenuInflater().inflate(R.menu.serach_bar , menu );
+
+        MenuItem item = menu.findItem(R.id.action_search);
+
+        SearchView  searchView = (SearchView) MenuItemCompat.getActionView(item) ;
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                    firebaseSearch(s) ;
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                firebaseSearch(s) ;
+                return false;
+            }
+        });
+
+
+
+
+
+
+            return  super.onCreateOptionsMenu(menu);
+    }
+
     private void loadDataFromFireBase() {
 
         mref = FirebaseDatabase.getInstance().getReference("notes").child(uid);
 
         options = new FirebaseRecyclerOptions.Builder<noteModel>().setQuery(mref, noteModel.class).build() ;
+
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<noteModel, viewHolderForNotes>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull viewHolderForNotes viewHolderForNotes, final int i, @NonNull noteModel noteModel) {
+
+
+                viewHolderForNotes.setDataToView(getApplicationContext() , noteModel.getTitle() , noteModel.getDesc() , noteModel.getColor_id() ,
+                        noteModel.getDate());
+
+
+
+
+            }
+
+            @NonNull
+            @Override
+            public viewHolderForNotes onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+            {
+
+                View  view = LayoutInflater.from(parent.getContext()).inflate(R.layout.note_row, parent, false);
+                final  viewHolderForNotes viewHolderForNotes = new viewHolderForNotes(view);
+
+
+
+
+                viewHolderForNotes.setOnClickListener(new viewHolderForNotes.ClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+
+
+
+        // sending user to the edit activity
+                        
+                        Intent i =  new Intent(getApplicationContext()  , TakeNote.class);
+
+                        i.putExtra("TITLE" , getItem(position).getTitle() ) ;
+                        i.putExtra("DESC" , getItem( position).getDesc() ) ;
+                        i.putExtra("COLORID" , getItem(position).getColor_id() ) ;
+                        i.putExtra("ID" , getItem(position).getId() ) ;
+
+
+                        startActivity(i);
+
+
+
+
+                    }
+                });
+
+
+
+
+                return viewHolderForNotes;
+            }
+        };
+
+       recyclerView.setLayoutManager(linearLayoutManager) ;
+
+        firebaseRecyclerAdapter.startListening();
+        recyclerView.setAdapter(firebaseRecyclerAdapter) ;
+
+
+
+
+
+
+
+
+
+
+    }
+
+    private  void firebaseSearch(String searchText)
+
+    {
+
+        mref = FirebaseDatabase.getInstance().getReference("notes").child(uid);
+
+        Query firbaseQuery = mref.orderByChild("desc").startAt(searchText
+                .toUpperCase())
+                .endAt(searchText.toUpperCase() + "\uf8ff") ;
+
+        options = new FirebaseRecyclerOptions.Builder<noteModel>().setQuery(firbaseQuery, noteModel.class).build() ;
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<noteModel, viewHolderForNotes>(options) {
             @Override
@@ -143,10 +279,11 @@ public class noteListActivity extends AppCompatActivity {
             }
         };
 
-       recyclerView.setLayoutManager(linearLayoutManager) ;
+        recyclerView.setLayoutManager(linearLayoutManager) ;
 
         firebaseRecyclerAdapter.startListening();
         recyclerView.setAdapter(firebaseRecyclerAdapter) ;
+
 
 
 
@@ -185,4 +322,7 @@ public class noteListActivity extends AppCompatActivity {
 
 
     }
+
+
 }
+

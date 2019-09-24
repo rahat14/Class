@@ -1,6 +1,7 @@
 package com.metacodersbd.noteit;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -17,8 +18,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.metacodersbd.noteit.models.testModel;
 import com.metacodersbd.noteit.signFunction.signInPage;
 
 import java.text.SimpleDateFormat;
@@ -34,8 +39,9 @@ public class TakeNote extends AppCompatActivity {
 
     EditText titleEdit , descEIDT ;
     Button uploadBTn ;
-    String  uid ,  title , desc , date ;
+    String  uid ,  title , desc , date  , colorID  , POSTID = "-00";
     ProgressBar pbar ;
+
 
 
     @Override
@@ -57,6 +63,16 @@ public class TakeNote extends AppCompatActivity {
         pbar.setVisibility(View.GONE);
 
 
+        Intent  o = getIntent();
+
+        titleEdit.setText(o.getStringExtra("TITLE"));
+        descEIDT.setText(o.getStringExtra("DESC"));
+
+        POSTID = o.getStringExtra("ID") ;
+
+        colorID = o.getStringExtra("COLORID") ;
+
+
         uploadBTn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,7 +92,7 @@ public class TakeNote extends AppCompatActivity {
 
 
                 // getting the data from the views
-                title = titleEdit.getText().toString();
+                title = titleEdit.getText().toString().toUpperCase() ;
                 desc = descEIDT.getText().toString();
 
 
@@ -159,4 +175,37 @@ public class TakeNote extends AppCompatActivity {
 
 
     }
+
+    public  void testDwld(){
+
+        DatabaseReference mreftest = FirebaseDatabase.getInstance().getReference("counter");
+
+
+                mreftest.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        testModel model = dataSnapshot.getValue(testModel.class) ;
+
+
+                        titleEdit.setText(model.getKeepTrack());
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                }) ;
+
+
+
+
+
+
+    }
+
+
 }

@@ -22,6 +22,15 @@ public class viewHolderForNotes extends RecyclerView.ViewHolder {
 
         /// item click
 
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                mClickListener.onItemClick(view , getAdapterPosition());
+            }
+        });
+
     }
 
     public  void  setDataToView(Context context , String  titlee , String description , String  color_id  , String date   )
@@ -42,8 +51,20 @@ public class viewHolderForNotes extends RecyclerView.ViewHolder {
 
     }
 
+    private  static  viewHolderForNotes.ClickListener  mClickListener;
 
 
+    public  interface  ClickListener
+    {
+                void onItemClick( View view , int position ) ;
 
+    }
+
+
+    public  static  void setOnClickListener(viewHolderForNotes.ClickListener clickListener)
+    {
+                    
+                mClickListener = clickListener ;
+    }
 
 }
