@@ -24,10 +24,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
-
-
-
     <EditText
         android:id="@+id/title"
         android:layout_width="match_parent"
@@ -53,6 +49,14 @@
         android:minLines="6"
         android:textSize="14sp"
         android:hint="Type your note..."/>
+
+
+    <com.thebluealliance.spectrum.SpectrumPalette
+        android:id="@+id/palette"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:spectrum_autoPadding="true"
+        app:spectrum_colors="@array/color_array" />
 
     <Button
         android:id="@+id/uplaodBtn"

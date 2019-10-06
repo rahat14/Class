@@ -5,12 +5,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class viewHolderForNotes extends RecyclerView.ViewHolder {
 
         View mview  ;
         TextView title , desc , dateView ;
+        CardView card ;
 
 
 
@@ -39,6 +41,8 @@ public class viewHolderForNotes extends RecyclerView.ViewHolder {
         // inti views
         title = mview.findViewById(R.id.note_titleTV) ;
         desc = mview.findViewById(R.id.descTV) ;
+        card = mview.findViewById(R.id.cardView) ;
+
         dateView = mview.findViewById(R.id.dateTv);
 
 
@@ -47,6 +51,18 @@ public class viewHolderForNotes extends RecyclerView.ViewHolder {
         title.setText(titlee);
         desc.setText(description);
         dateView.setText(date);
+
+        if(color_id.equals("null"))
+        {
+           color_id = "-10603087" ;
+
+
+        }
+
+            card.setCardBackgroundColor(Integer.parseInt(color_id) );
+
+
+
 
 
     }

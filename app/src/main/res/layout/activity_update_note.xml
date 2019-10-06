@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="10dp"
+    tools:context=".TakeNote">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/pbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+
+
+
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:hint="To do"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+            <EditText
+                android:id="@+id/descEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="top|left"
+                android:hint="Type your note..."
+                android:inputType="textMultiLine"
+                android:minLines="6"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:weightSum="2"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="100dp">
+
+                <Button
+                    android:id="@+id/updateBtn"
+                    android:layout_width="150dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="25dp"
+                    android:textColor="@color/white"
+                    android:text="Update"
+                    android:fontFamily="@font/monregular"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:background="@color/green"
+                    android:layout_height="wrap_content"
+                    android:foreground="?attr/selectableItemBackground"
+
+                    />
+                <Button
+                    android:id="@+id/delBtn"
+                    android:layout_width="150dp"
+                    android:layout_marginTop="25dp"
+                    android:textColor="@color/white"
+                    android:text="Delete"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/monregular"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:background="@color/red"
+                    android:layout_height="wrap_content"
+                    android:foreground="?attr/selectableItemBackground"
+
+
+                    />
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

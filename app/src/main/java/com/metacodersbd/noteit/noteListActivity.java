@@ -9,11 +9,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.SearchView ;
@@ -43,6 +47,10 @@ public class noteListActivity extends AppCompatActivity {
     FirebaseAuth auth ;
     FloatingActionButton fab ;
     RecyclerView recyclerView ;
+    GridLayoutManager gridLayoutManager ;
+    ProgressBar progressBar ;
+    TextView textView ;
+
     LinearLayoutManager linearLayoutManager ;
     DatabaseReference mref ;
     String uid ;
@@ -68,15 +76,15 @@ public class noteListActivity extends AppCompatActivity {
 
 
         //init views
-
+        textView = findViewById(R.id.novalueText) ;
         logOutBtn = findViewById(R.id.logoutBtn);
         fab = findViewById(R.id.fab) ;
         recyclerView = findViewById(R.id.recyclerViewForNoteList);
+        progressBar = findViewById(R.id.pbar);
 
 
-        //TODO 1. search  implementation
-        //TODo 2. update the notes
-        //TODO 3. Deleting the notes
+        progressBar.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.GONE);
         //TODO 4. Finalizing / testing
 
 
@@ -88,8 +96,9 @@ public class noteListActivity extends AppCompatActivity {
 
         linearLayoutManager.setStackFromEnd(true);
         linearLayoutManager.setReverseLayout(true);
-
-        recyclerView.setLayoutManager(linearLayoutManager) ;
+        gridLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
 
        // initWelcomeBox();
@@ -124,6 +133,22 @@ public class noteListActivity extends AppCompatActivity {
 
         loadDataFromFireBase() ;
 
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                if(gridLayoutManager.getItemCount()== 0)
+                {
+
+
+                    textView.setVisibility(View.VISIBLE);
+                }
+
+                progressBar.setVisibility(View.GONE);
+
+            }
+        }, 3000);
 
     }
 
@@ -202,8 +227,8 @@ public class noteListActivity extends AppCompatActivity {
 
 
         // sending user to the edit activity
-                        
-                        Intent i =  new Intent(getApplicationContext()  , TakeNote.class);
+
+                        Intent i =  new Intent(getApplicationContext()  , updateNote.class);
 
                         i.putExtra("TITLE" , getItem(position).getTitle() ) ;
                         i.putExtra("DESC" , getItem( position).getDesc() ) ;
@@ -226,7 +251,7 @@ public class noteListActivity extends AppCompatActivity {
             }
         };
 
-       recyclerView.setLayoutManager(linearLayoutManager) ;
+       recyclerView.setLayoutManager(gridLayoutManager) ;
 
         firebaseRecyclerAdapter.startListening();
         recyclerView.setAdapter(firebaseRecyclerAdapter) ;
@@ -248,9 +273,9 @@ public class noteListActivity extends AppCompatActivity {
 
         mref = FirebaseDatabase.getInstance().getReference("notes").child(uid);
 
-        Query firbaseQuery = mref.orderByChild("desc").startAt(searchText
-                .toUpperCase())
-                .endAt(searchText.toUpperCase() + "\uf8ff") ;
+        Query firbaseQuery = mref.orderByChild("title").startAt(searchText
+                .toLowerCase())
+                .endAt(searchText.toLowerCase() + "\uf8ff") ;
 
         options = new FirebaseRecyclerOptions.Builder<noteModel>().setQuery(firbaseQuery, noteModel.class).build() ;
 
@@ -279,7 +304,7 @@ public class noteListActivity extends AppCompatActivity {
             }
         };
 
-        recyclerView.setLayoutManager(linearLayoutManager) ;
+        recyclerView.setLayoutManager(new GridLayoutManager(this , 2 )) ;
 
         firebaseRecyclerAdapter.startListening();
         recyclerView.setAdapter(firebaseRecyclerAdapter) ;

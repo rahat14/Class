@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginStart="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:id="@+id/cardView"
+        app:cardCornerRadius="4dp"
+        android:elevation="8dp"
+        android:layout_width="190dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         app:cardBackgroundColor="#26C6DA">
@@ -25,15 +29,17 @@
                 android:layout_marginBottom="8dp"
                 android:text="Note Title"
                 android:textStyle="bold"
-                android:textColor="@color/black"/>
+                android:textColor="@color/white"/>
 
             <TextView
                 android:id="@+id/descTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:maxLines="2"
+                android:textColor="@color/white"
                 android:layout_marginBottom="8dp"
                 android:text="@string/highlight_text" />
 
@@ -43,7 +49,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="bottom|end"
                 android:layout_marginRight="8dp"
+                android:textColor="@color/white"
                 android:layout_marginBottom="8dp"
+                android:textSize="10sp"
                 android:text="2019-08-25 01:52:30"/>
 
         </LinearLayout>

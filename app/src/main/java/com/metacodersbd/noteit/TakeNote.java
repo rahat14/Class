@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.metacodersbd.noteit.models.testModel;
 import com.metacodersbd.noteit.signFunction.signInPage;
+import com.thebluealliance.spectrum.SpectrumPalette;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,8 +40,12 @@ public class TakeNote extends AppCompatActivity {
 
     EditText titleEdit , descEIDT ;
     Button uploadBTn ;
+    int clr = -10603087 ;
+
     String  uid ,  title , desc , date  , colorID  , POSTID = "-00";
+
     ProgressBar pbar ;
+    SpectrumPalette spectrumPalette ;
 
 
 
@@ -58,19 +63,22 @@ public class TakeNote extends AppCompatActivity {
         descEIDT = findViewById(R.id.descEdit);
         uploadBTn = findViewById(R.id.uplaodBtn);
         pbar = findViewById(R.id.pbar);
-
-
+        spectrumPalette = findViewById(R.id.palette) ;
         pbar.setVisibility(View.GONE);
 
 
-        Intent  o = getIntent();
+        spectrumPalette.setOnColorSelectedListener(new SpectrumPalette.OnColorSelectedListener() {
+            @Override
+            public void onColorSelected(int color) {
 
-        titleEdit.setText(o.getStringExtra("TITLE"));
-        descEIDT.setText(o.getStringExtra("DESC"));
+                clr = color ;
 
-        POSTID = o.getStringExtra("ID") ;
+             //   Toast.makeText(getApplicationContext() , "Error : " + clr , Toast.LENGTH_LONG).show();
 
-        colorID = o.getStringExtra("COLORID") ;
+                       // uploadBTn.setBackgroundColor(clr);
+
+            }
+        });
 
 
         uploadBTn.setOnClickListener(new View.OnClickListener() {
@@ -78,8 +86,7 @@ public class TakeNote extends AppCompatActivity {
             public void onClick(View view) {
 
 
-
-
+                colorID = String.valueOf(clr) ;
                 // taking the date from the andorid Clock
                 String delegate = "hh:mm aaa";
 
@@ -109,7 +116,7 @@ public class TakeNote extends AppCompatActivity {
 
 
                     pbar.setVisibility(View.VISIBLE);
-                    uploadDataToFireBase(title , desc , date);
+                    uploadDataToFireBase(title , desc , date , colorID);
 
 
 
@@ -131,7 +138,7 @@ public class TakeNote extends AppCompatActivity {
 
     }
 
-    private void uploadDataToFireBase(String Title, String Desc , String Date) {
+    private void uploadDataToFireBase(String Title, String Desc , String Date , String color ) {
 
 
 
@@ -141,8 +148,8 @@ public class TakeNote extends AppCompatActivity {
 
         map.put("title" , Title) ;
         map.put("desc" , Desc) ;
-        map.put("date" ,date ) ;
-        map.put("color_id", "null") ;
+        map.put("date" ,Date ) ;
+        map.put("color_id", color) ;
         map.put("id",push_id );
 
         mref.child(push_id).setValue(map)

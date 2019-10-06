@@ -42,5 +42,7 @@ dependencies {
 
     implementation 'com.firebaseui:firebase-ui-database:5.1.0'
 
-}
+    //color picker
+    implementation 'com.thebluealliance:spectrum:0.7.1'
 
+}
